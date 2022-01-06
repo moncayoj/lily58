@@ -27,8 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define EE_HANDS
 
 #define IGNORE_MOD_TAP_INTERRUPT
-// #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 150
+
+#define LEADER_TIMEOUT 400
+#define LEADER_PER_KEY_TIMING
 
 #undef RGBLED_NUM
 #define RGBLIGHT_ANIMATIONS
@@ -45,3 +47,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_SLEEP
 */
+

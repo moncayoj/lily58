@@ -29,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |  =   |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LGUI | LAlt |LOWER | /Enter  /       \Space \  |RAISE |      |  \   |
+ *                   | LGUI | LAlt |LOWER | /Enter  /       \Space \  |RAISE | LEAD |  \   |
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_SFEQ,
-                        KC_LGUI, KC_LALT, MO(_LOWER), KC_ENT, KC_SPC, MO(_RAISE), XXXXXXX, KC_BSLS
+                        KC_LGUI, KC_LALT, MO(_LOWER), KC_ENT, KC_SPC, MO(_RAISE), KC_LEAD, KC_BSLS
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -154,4 +154,129 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // set_timelog();
     }
     return true;
+}
+
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+  LEADER_DICTIONARY() {
+    leading = false;
+    leader_end();
+
+    // Open and close parenthesis
+    SEQ_ONE_KEY(KC_COMM) {
+      SEND_STRING("()" SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within parenthesis (macOS version)
+    SEQ_TWO_KEYS(KC_COMM, KC_COMM) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "(" SS_LALT(SS_TAP(X_RIGHT)) ")");
+    }
+
+    // Wrap selection within parenthesis (macOS version)
+    SEQ_THREE_KEYS(KC_COMM, KC_COMM, KC_COMM) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "()" SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Open and close brackets
+    SEQ_ONE_KEY(KC_DOT) {
+      SEND_STRING("[]" SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within brackets (macOS version)
+    SEQ_TWO_KEYS(KC_DOT, KC_DOT) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "[" SS_LALT(SS_TAP(X_RIGHT)) "]");
+    }
+
+    // Wrap selection within brackets (macOS version)
+    SEQ_THREE_KEYS(KC_DOT, KC_DOT, KC_DOT) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "[]" SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Open and close curly brackets
+    SEQ_ONE_KEY(KC_SLSH) {
+      SEND_STRING("{}" SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within curly brackets (macOS version)
+    SEQ_TWO_KEYS(KC_SLSH, KC_SLSH) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "{" SS_LALT(SS_TAP(X_RIGHT)) "}");
+    }
+
+    // Wrap selection within curly brackets (macOS version)
+    SEQ_THREE_KEYS(KC_SLSH, KC_SLSH, KC_SLSH) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "{}" SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Open and close quotes
+    SEQ_ONE_KEY(KC_SCLN) {
+      SEND_STRING("\"\"" SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within quotes (macOS version)
+    SEQ_TWO_KEYS(KC_SCLN, KC_SCLN) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "\"" SS_LALT(SS_TAP(X_RIGHT)) "\"");
+    }
+
+    // Wrap selection within quotes (macOS version)
+    SEQ_THREE_KEYS(KC_SCLN, KC_SCLN, KC_SCLN) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "\"\"" SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Open and close tilde
+    SEQ_ONE_KEY(KC_TILD) {
+      SEND_STRING("''" SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within tilde (macOS version)
+    SEQ_TWO_KEYS(KC_TILD, KC_TILD) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "'" SS_LALT(SS_TAP(X_RIGHT)) "'");
+    }
+
+    // Wrap selection within tilde (macOS version)
+    SEQ_THREE_KEYS(KC_TILD, KC_TILD, KC_TILD) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "''" SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Start comment C style
+    SEQ_ONE_KEY(KC_C) {
+      SEND_STRING("/**/" SS_TAP(X_LEFT) SS_TAP(X_LEFT));
+    }
+
+    // Wrap a word within comment C style (macOS version)
+    SEQ_TWO_KEYS(KC_C, KC_C) {
+      SEND_STRING(SS_LALT(SS_TAP(X_LEFT)) "/*" SS_LALT(SS_TAP(X_RIGHT)) "*/");
+    }
+
+    // Wrap selection within comment C style (macOS version)
+    SEQ_THREE_KEYS(KC_C, KC_C, KC_C) {
+      SEND_STRING(SS_LGUI(SS_TAP(X_X)) "/**/" SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_LGUI(SS_TAP(X_V)) SS_TAP(X_RIGHT));
+    }
+
+    // Delete word on cursor
+    SEQ_ONE_KEY(KC_BSPC) {
+      SEND_STRING(SS_LALT(SS_TAP(X_RIGHT)) SS_LALT(SS_LSFT(SS_TAP(X_LEFT))) SS_TAP(X_BSPC));
+    }
+
+    // Backward delete word
+    SEQ_TWO_KEYS(KC_BSPC, KC_BSPC) {
+      SEND_STRING(SS_LALT(SS_LSFT(SS_TAP(X_LEFT))) SS_TAP(X_BSPC));
+    }
+
+    // Forward delete word
+    SEQ_THREE_KEYS(KC_BSPC, KC_BSPC, KC_BSPC) {
+      SEND_STRING(SS_LALT(SS_LSFT(SS_TAP(X_RIGHT)))  SS_TAP(X_BSPC));
+    }
+
+    // Delete to the end of the line
+    SEQ_TWO_KEYS(KC_BSPC, KC_SCLN) {
+      SEND_STRING(SS_LALT(SS_LSFT(SS_TAP(X_END)))  SS_TAP(X_BSPC));
+    }
+
+    // Delete to the begining of the line
+    SEQ_TWO_KEYS(KC_BSPC, KC_K) {
+      SEND_STRING(SS_LALT(SS_LSFT(SS_TAP(X_HOME)))  SS_TAP(X_BSPC));
+    }
+
+  }
 }
