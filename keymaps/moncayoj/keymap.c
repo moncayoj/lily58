@@ -9,6 +9,8 @@
 #define RECTLFT LCA(KC_LEFT)
 #define RECTRGT LCA(KC_RGHT)
 #define KC_SFEQ RSFT_T(KC_EQL)
+#define TMX_LFT LSFT(KC_LEFT)
+#define TMX_RGT LSFT(KC_RGHT)
 
 enum layer_number {
     _QWERTY = 0,
@@ -63,14 +65,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              _______, _______, _______, KC_PGDN, KC_PGUP,  _______, _______, _______
 ),
 /* RAISE
- * ,-----------------------------------------.                    ,-----------------------------------------.
- * |   ~  |      |      |      |      |      |                    |      |      |      |      |      |  DEL |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | CAPS |      |      |      |      |      |                    |      |      |      |  Up  |      | VOLUP|
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |-------.    ,-------|      |      | Left | Down |Right | VOLD |
- * |------+------+------+------+------+------|RECTLFT|    |RECTRGT|------+------+------+------+------+------|
- * |  F7  |  F8  |  F9  | F10  | F11  | F12  |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
+ * ,--------------------------------------------.                    ,-----------------------------------------.
+ * |   ~  |       |       |       |      |      |                    |      |      |      |      |      |  DEL |
+ * |------+-------+-------+-------+------+------|                    |------+------+------+------+------+------|
+ * | CAPS |       |       |       |      |      |                    |      |      |      |  Up  |      | VOLUP|
+ * |------+-------+-------+-------+------+------|                    |------+------+------+------+------+------|
+ * |      |TMX_LFT|       |TMX_RGT|      |      |-------.    ,-------|      |      | Left | Down |Right | VOLD |
+ * |------+-------+-------+-------+------+------|RECTLFT|    |RECTRGT|------+------+------+------+------+------|
+ * |      |       |       |       |      |      |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LGUI | LAlt |LOWER | / HOME  /       \  END \  |RAISE |      |  \   |
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -79,9 +81,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_RAISE] = LAYOUT(
   KC_TILD, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, KC_DEL,
-  KC_CAPS, _______, _______, _______, _______, _______,                    _______, _______, _______,   KC_UP, _______,  KC_KB_VOLUME_UP,
-  KC_F1,  KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_KB_VOLUME_DOWN,
-  KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   RECTLFT, RECTRGT,  KC_PLUS, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
+  KC_CAPS, _______, _______, _______, _______, _______,                     _______, _______, _______,   KC_UP, _______,  KC_KB_VOLUME_UP,
+  XXXXXXX, TMX_LFT, XXXXXXX, TMX_RGT, XXXXXXX, XXXXXXX,                     _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_KB_VOLUME_DOWN,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  RECTLFT, RECTRGT,  KC_PLUS, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
                              _______, _______, _______,  KC_HOME, KC_END,  _______, _______, _______
 ),
 /* ADJUST
@@ -276,6 +278,16 @@ void matrix_scan_user(void) {
     // Delete to the begining of the line
     SEQ_TWO_KEYS(KC_BSPC, KC_K) {
       SEND_STRING(SS_LALT(SS_LSFT(SS_TAP(X_HOME)))  SS_TAP(X_BSPC));
+    }
+
+    // VIM quit without saving
+    SEQ_ONE_KEY(KC_Q) {
+      SEND_STRING(SS_TAP(X_ESC) ":q!" SS_TAP(X_ENTER));
+    }
+
+    // VIM quit saving
+    SEQ_ONE_KEY(KC_W) {
+      SEND_STRING(SS_TAP(X_ESC) ":wq!" SS_TAP(X_ENTER));
     }
 
   }
