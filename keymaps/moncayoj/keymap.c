@@ -290,5 +290,15 @@ void matrix_scan_user(void) {
       SEND_STRING(SS_TAP(X_ESC) ":wq!" SS_TAP(X_ENTER));
     }
 
+    // VIM set paste mode
+    SEQ_ONE_KEY(KC_P) {
+      SEND_STRING(SS_TAP(X_ESC) ":set paste" SS_TAP(X_ENTER));
+    }
+
+    // VIM set no paste mode
+    SEQ_TWO_KEYS(KC_N, KC_P) {
+      SEND_STRING(SS_TAP(X_ESC) ":set nopaste" SS_TAP(X_ENTER));
+    }
+
   }
 }
