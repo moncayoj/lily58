@@ -292,7 +292,7 @@ void matrix_scan_user(void) {
 
     // VIM set paste mode
     SEQ_ONE_KEY(KC_P) {
-      SEND_STRING(SS_TAP(X_ESC) ":set paste" SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_ESC) ":set paste" SS_TAP(X_ENTER) SS_TAP(X_I) SS_LGUI(SS_TAP(X_V)));
     }
 
     // VIM set no paste mode
